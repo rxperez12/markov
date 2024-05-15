@@ -1,6 +1,5 @@
 /** Textual markov chain generator. */
 
-
 class MarkovMachine {
 
   /** Build markov machine; read in text.*/
@@ -27,11 +26,12 @@ class MarkovMachine {
    * */
 
   getChains() {
-    let chains = {};
+    const chains = {};
 
     for (let i = 0; i < this.words.length; i++) {
       const word = this.words[i];
-      const nextWord = (this.words[i + 1]) ? this.words[i + 1] : null;
+      const nextWord = (this.words[i + 1]) ? this.words[i + 1] : null; // || null
+
       if (Object.keys(chains).includes(word)) {
         chains[word].push(nextWord);
       } else {
@@ -46,17 +46,29 @@ class MarkovMachine {
    *  until it hits a null choice. */
 
   getText() {
-    // TODO: implement this!
 
     // - start at the first word in the input text
+
     // - find a random word from the following-words of that
+    let currentWord = this.words[0];
+    const answer = [];
+
+    while (currentWord !== null) {
+      answer.push(currentWord);
+      const potentialWords = this.chains[currentWord];
+      currentWord = getRandomChoice(potentialWords);
+    }
+    return answer.join(' ');
     // - repeat until reaching the terminal null
   }
 }
 
 
-let machine = new MarkovMachine('The cat in the hat.');
-
-console.log(machine.getChains());
+/**
+ * Given an array, choose random value and return it to user
+ */
+function getRandomChoice(arr) {
+  return arr.at(arr.length * Math.random());
+}
 
 export { MarkovMachine };
